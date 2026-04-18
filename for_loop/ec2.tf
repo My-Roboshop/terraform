@@ -1,10 +1,12 @@
 resource "aws_instance" "terraform" {
-  count = 10
+  for_each = toset(var.instances)
   ami           = "ami-0220d79f3f480ecf5"
-  instance_type = "t2.micro"
+  #instance_type = each.value
+  instance_type = "t3.medium"
   vpc_security_group_ids = [aws_security_group.allow_all.id] # id means ID of the security group
   tags = {
-    Name = var.instances[count.index]
+    #Name = each.key # if we give name in tags, it will display instance/any service with that name
+    Name = each.value
     Terraform = true  # to know that we have created using terraform
   }
 }
